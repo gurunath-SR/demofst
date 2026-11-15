@@ -1,0 +1,6 @@
+{
+  "name": "MiniBlog",
+  "description": "A clean full-stack microblogging application built with HTML, CSS, Vanilla JavaScript, Node.js, Express, MongoDB, and JWT authentication.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home · MiniBlog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="home">
+  <div class="app-shell">
+    <!-- Left Navigation Sidebar -->
+    <aside class="sidebar-left" aria-label="Primary navigation">
+      <div class="sidebar-sticky">
+        <a href="index.html" class="brand-link">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/>
+            </svg>
+          </span>
+          <span class="brand-name">MiniBlog</span>
+        </a>
+
+        <nav class="nav-menu">
+          <a href="index.html" class="nav-item active">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+            <span>Home</span>
+          </a>
+
+          <a href="profile.html" class="nav-item" id="navProfileLink">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span>Profile</span>
+          </a>
+
+          <button type="button" class="nav-item nav-logout" id="logoutBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-user" id="sidebarUserCard"></div>
+      </div>
+    </aside>
+
+    <!-- Center Feed Column -->
+    <main class="feed-column">
+      <header class="column-header">
+        <div class="column-header-inner">
+          <h1 class="column-title">Home</h1>
+          <button type="button" class="btn-ghost-sm" id="refreshFeedBtn" title="Refresh feed">
+            Refresh
+          </button>
+        </div>
+      </header>
+
+      <!-- Create Post Box -->
+      <section class="composer-card" aria-label="Create a post">
+        <div class="composer-row">
+          <div id="composerAvatar" class="avatar-slot"></div>
+          <form id="createPostForm" class="composer-form">
+            <label for="postContent" class="sr-only">What is happening?</label>
+            <textarea
+              id="postContent"
+              name="content"
+              rows="3"
+              maxlength="280"
+              placeholder="What's on your mind?"
+              required
+            ></textarea>
+            <div class="composer-footer">
+              <div class="composer-meta">
+                <span id="charCounter" class="char-counter">0 / 280</span>
+                <span id="composerError" class="inline-error" role="alert"></span>
+              </div>
+              <button type="submit" class="btn-primary" id="publishPostBtn">Post</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- Home Feed List -->
+      <section aria-label="Latest posts">
+        <div id="feedContainer" class="feed-list">
+          <div class="state-message">Loading your feed...</div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Right Suggested Users Sidebar -->
+    <aside class="sidebar-right" aria-label="Suggested users">
+      <div class="sidebar-sticky">
+        <div class="card">
+          <h2 class="card-heading">Who to follow</h2>
+          <div id="suggestedUsersList" class="suggested-list">
+            <div class="state-message-sm">Loading suggestions...</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Edit Post Modal -->
+  <div id="editPostModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="editModalTitle" class="modal-title">Edit Post</h2>
+        <button type="button" class="modal-close" data-close-modal="editPostModal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="editPostForm" class="modal-body">
+        <input type="hidden" id="editPostId" />
+        <label for="editPostContent" class="sr-only">Post content</label>
+        <textarea id="editPostContent" rows="4" maxlength="280" required></textarea>
+        <div class="modal-footer-row">
+          <span id="editCharCounter" class="char-counter">0 / 280</span>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" data-close-modal="editPostModal">Cancel</button>
+            <button type="submit" class="btn-primary">Save Changes</button>
+          </div>
+        </div>
+        <p id="editPostError" class="inline-error" role="alert"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deletePostModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal-card modal-card-sm">
+      <div class="modal-header">
+        <h2 id="deleteModalTitle" class="modal-title">Delete Post</h2>
+        <button type="button" class="modal-close" data-close-modal="deletePostModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">Are you sure you want to permanently delete this post? This action cannot be undone.</p>
+        <input type="hidden" id="deletePostId" />
+        <div class="modal-actions modal-actions-end">
+          <button type="button" class="btn-secondary" data-close-modal="deletePostModal">Cancel</button>
+          <button type="button" class="btn-danger" id="confirmDeletePostBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
